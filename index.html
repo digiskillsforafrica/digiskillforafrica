@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digiskillsforafrica</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Reset some default browser styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow-x: hidden; /* Prevent horizontal overflow */
+            overflow-y: auto; /* Ensure vertical scrolling is enabled */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; /* Ensure it is behind other content */
+        }
+
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #333;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #loader:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            border: 5px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #content {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #1286e4;
+            color: #fff;
+            padding: 1rem 0;
+            position: relative;
+            z-index: 1000;
+        }
+
+        header .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        header nav {
+            position: relative;
+        }
+
+        /* Menu Toggle Button */
+        header .menu-toggle {
+            background: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px;
+            margin: 0;
+            z-index: 1001;
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            display: none; /* Hidden by default */
+            transition: background-color 0.3s;
+        }
+
+        header .menu-toggle:hover {
+            background-color: #ddd;
+        }
+
+        header .menu-toggle .menu-icon {
+            width: 30px;
+            height: 3px;
+            background: #1286e4;
+            position: relative;
+            transition: background 0.3s ease;
+        }
+
+        header .menu-toggle .menu-icon:before,
+        header .menu-toggle .menu-icon:after {
+            content: '';
+            width: 30px;
+            height: 3px;
+            background: #1286e4;
+            position: absolute;
+            transition: 0.3s ease;
+        }
+
+        header .menu-toggle .menu-icon:before {
+            top: -8px;
+        }
+
+        header .menu-toggle .menu-icon:after {
+            top: 8px;
+        }
+
+        /* Navigation Menu */
+        header .nav-menu {
+            list-style: none;
+            display: flex;
+            justify-content: flex-end;
+            margin: 0;
+            padding: 0;
+        }
+
+        header .nav-menu li {
+            margin-left: 20px;
+        }
+
+        header .nav-menu li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            header .nav-menu {
+                display: none; /* Hidden by default on mobile */
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: #1286e4;
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease, opacity 0.3s ease;
+            }
+
+            header .nav-menu.open {
+                display: flex;
+                max-height: 300px; /* Adjust based on content height */
+                opacity: 1;
+            }
+
+            header .menu-toggle {
+                display: flex; /* Show the toggle button on mobile */
+            }
+        }
+
+        .animated-header {
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .flash-sale-content {
+            margin: 50px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flash-grid-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .flash-grid-item img {
+            max-width: 100%;
+        }
+
+        .flash-saleH1 {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .flash-salesp {
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .trusted-companies {
+            background: #a3f737;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .trusted-companies h2 {
+            font-size: 1.75rem;
+            margin-bottom: 20px;
+        }
+
+        .company-logos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .company-logos img {
+            width: 100px;
+            filter: grayscale(100%);
+        }
+
+        .broad-selection {
+            padding: 20px 0;
+            text-align: center;
+            background: #f0f0f0;
+        }
+
+        .broad-selection h2 {
+            font-size: 1.75rem;
+            margin-bottom: 10px;
+        }
+
+        .broad-selection p {
+            font-size: 1.25rem;
+        }
+
+        .python-courses {
+            background: #a3f737;
+            padding: 20px 0;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .course {
+            background: #d9a5f7;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .course img {
+            width: 100%;
+            height: auto;
+        }
+
+        footer {
+            background: #1286e4;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Video (if needed) -->
+    <!-- <div class="video-background">
+        <video autoplay muted loop>
+            <source src="path_to_your_video.mp4" type="video/mp4">
+        </video>
+    </div> -->
+
+    <div id="loader">
+        <!-- Loader content, e.g., spinner -->
+    </div>
+    <div id="content">
+        <header class="animated-header">
+            <div class="container">
+                <div class="logo">
+                    <a href="#">Digiskillsforafrica</a>
+                </div>
+                <nav>
+                    <button class="menu-toggle" aria-label="Toggle menu">
+                        <span class="menu-icon"></span>
+                    </button>
+                    <ul class="nav-menu">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Courses</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <main>
+            <section class="flash-sale-content">
+                <div class="flash-grid-item">
+                    <img class="imgg" src="images/course4.jpg" alt="Flash Sale">
+                    <h1 class="flash-saleH1">Flash Sale</h1>
+                    <p class="flash-salesp">Learn (almost) anything. Courses now on sale for as low as ₦3,900</p>
+                </div>
+                <div class="flash-grid-item">
+                    <img class="imggg" src="images/course5.jpg" alt="Course Image">
+                    <h1 class="flash-saleH1">Flash Sale</h1>
+                    <p class="flash-salesp">Learn (almost) anything. Courses now on sale for as low as ₦3,900</p>
+                </div>
+            </section>
+
+            <section class="trusted-companies">
+                <div class="container">
+                    <h2>Trusted by over 15,000 companies and millions of learners around the world</h2>
+                    <div class="company-logos">
+                        <img src="images/visa-removebg-preview.png" alt="Visa logo">
+                        <img src="images/mastercard-removebg-preview.png" alt="MasterCard logo">
+                        <img src="images/directdebit-removebg-preview.png" alt="Direct Debit logo">
+                    </div>
+                </div>
+            </section>
+
+            <section class="broad-selection">
+                <div class="container">
+                    <h2>A broad selection of courses</h2>
+                    <p>Choose from over 220,000 online video courses with new additions published every month.</p>
+                </div>
+            </section>
+
+            <section class="python-courses">
+                <div class="container">
+                    <h2>Expand your career opportunities with Python</h2>
+                    <p>Take one of our courses and learn how to code using this incredibly useful language. Its simple syntax and readability make Python perfect for Flask, Django, data science, and machine learning. You’ll learn how to build everything from games to sites to apps. Choose from a range of courses that will appeal to both beginners and advanced developers alike.</p>
+                    
+                    <div class="course-grid">
+                        <div class="course">
+                            <img src="images/course4.jpg" alt="Course Image">
+                            <h4>The Complete Python Bootcamp From Zero to Hero in Python</h4>
+                            <p>Current price: ₦9,900 • Original price: ₦41,900</p>
+                        </div>
+
+                        <div class="course">
+                            <img src="images/course1.jpg" alt="Course Image">
+                            <h4>100 Days of Code: The Complete Python Pro Bootcamp</h4>
+                            <p>Current price: ₦8,500 • Original price: ₦41,900</p>
+                        </div>
+
+                        <div class="course">
+                            <img src="images/course3.jpg" alt="Course Image">
+                            <h4>Automate the Boring Stuff with Python Programming</h4>
+                            <p>Current price: ₦8,900 • Original price: ₦41,900</p>
+                        </div>
+
+                        <div class="course">
+                            <img src="images/course2.jpg" alt="Course Image">
+                            <h4>Python for Data Science and Machine Learning Bootcamp</h4>
+                            <p>Current price: ₦9,900 • Original price: ₦41,900</p>
+                        </div>
+
+                        <div class="course">
+                            <img src="images/course1.jpg" alt="Course Image">
+                            <h4>Python Programming - From Basics to Advanced level</h4>
+                            <p>Current price: ₦6,400 • Original price: ₦24,900</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2024 Digiskillsforafrica. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        window.addEventListener("load", function() {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("content").style.display = "flex"; // Adjusted to use flex display
+            document.querySelector("header").classList.add("animated-header");
+        });
+
+        document.querySelector(".menu-toggle").addEventListener("click", function() {
+            const navMenu = document.querySelector(".nav-menu");
+            navMenu.classList.toggle("open");
+        });
+    </script>
+</body>
+</html>
